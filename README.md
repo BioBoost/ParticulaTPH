@@ -49,10 +49,10 @@ Here you can find all the data and methodes neded for use in the Particula proje
 ### Using the Library
 
 #### List of ingredients
--> Make sure you can compile the code with an mbed compiler (we used mbe-cli)
--> Get a compapatible editor
--> Get a BME280
--> Get a complaibel Mbed microcontroler
+-> Make sure you can compile the code with an mbed compiler (we used mbe-cli)  
+-> Get a compapatible editor  
+-> Get a BME280  
+-> Get a complaibel Mbed microcontroler  
 Connect the sensor and the microcontroller like in the pinout above.
 
 #### using mbed cli to add this library
