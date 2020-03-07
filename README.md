@@ -30,7 +30,7 @@ int main() {
 
 #### Pinout
 Connect the folowing leads From the BME 280 sensor:  
-| from | to | desription |
+| FROM | TO | Desription |
 | :----: | :----: | :--- |
 | VDD | 3V3 | 3V3 powersuply |  
 | GND | GND | comon ground |
