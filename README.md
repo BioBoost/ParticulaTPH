@@ -1,4 +1,4 @@
-x# ParticulaTPH
+# ParticulaTPH
 This is a repository where we put code for the BME280 sensor (TPH)
 
 ## BME 280 mbed library
@@ -19,10 +19,10 @@ BME280 TphI2c = BME280(D0, D1, addr);
 
 int main() {
     while(1) {
-    pc.printf("\n Humidity = %lf", TphI2c.getHumidity());
-    pc.printf("\n Temperature = %lf", TphI2c.getTemperature());
-    pc.printf("\n Presure = %lf", TphI2c.getPressure());
-    wait(2);
+        pc.printf("\n Humidity = %lf", TphI2c.getHumidity());
+        pc.printf("\n Temperature = %lf", TphI2c.getTemperature());
+        pc.printf("\n Presure = %lf", TphI2c.getPressure());
+        wait(2);
     }
 
 }
@@ -70,5 +70,5 @@ char addr = 0x76 << 1;  // We need to shift the address 1 bit because mbed uses 
 ```
 There still is the problem left of defining your pinout so the microcontroller can comunicate with the sesor:  
 ```
-BME280 TphI2c = BME280(D0, D1, addr);
+BME280 TphI2c = BME280(SDA, SCL, addr);
 ```
