@@ -31,7 +31,7 @@ int main() {
 #### Pinout
 Connect the folowing leads From the BME 280 sensor:  
 | from | to | desription |
-| :--- | :----: | ---: |
+| :----: | :----: | :--- |
 | VDD | 3V3 | 3V3 powersuply |  
 | GND | GND | comon ground |
 | SDO | GND | This selects the Address on the I2C buss To 0X76 |
