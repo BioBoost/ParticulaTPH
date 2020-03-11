@@ -44,6 +44,19 @@ In the folowing image we are using a Nucleo_F303K8 and a ADAFRUIT_BME280 board.
 
 #### UML
 Here you can find all the data and methodes neded for use in the Particula project.
+| BME280 | 
+| :---- | 
+|  |
+| +PinSda |
+| +PinScl |
+|  |
+| +BME280(I2C $ I2C) |
+| +BME280(PinSda, PinScl, adress) |
+| +temperature():double |
+| +presure():double |
+| +humidity():double |
+| +sleep() |
+| +awake() | 
 ![](img/UMLBME280.png)
 
 ### Using the Library
@@ -68,7 +81,7 @@ We need to give our device the right addess:
 ```
 char addr = 0x76 << 1;  // We need to shift the address 1 bit because mbed uses 8 bit addresses forr the I2C bus
 ```
-There still is the problem left of defining your pinout so the microcontroller can comunicate with the sesor:  
+There still is the problem left of defining your pinout so the microcontroller can comunicate with the sensor:  
 ```
 BME280 TphI2c = BME280(SDA, SCL, addr);
 ```
