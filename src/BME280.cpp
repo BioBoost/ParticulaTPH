@@ -4,27 +4,16 @@
 
 namespace BME280_TPH{
     BME280::BME280(PinName sda, PinName scl, char slave_adr)
-        :
-        i2c_p(new I2C(sda, scl)), 
-        i2c(*i2c_p),
-        address(slave_adr),
-        t_fine(0)
-    {
+        :i2c_p(new I2C(sda, scl)), i2c(*i2c_p), address(slave_adr), t_fine(0){
         initialize();
     }
 
     BME280::BME280(I2C &i2c_obj, char slave_adr)
-        :
-        i2c_p(NULL), 
-        i2c(i2c_obj),
-        address(slave_adr),
-        t_fine(0)
-    {
+        : i2c_p(NULL), i2c(i2c_obj), address(slave_adr), t_fine(0){
         initialize();
     }
 
-    BME280::~BME280()
-    {
+    BME280::~BME280(){
         if (NULL != i2c_p)
             delete  i2c_p;
     }
@@ -189,6 +178,30 @@ namespace BME280_TPH{
 
     double BME280::humidity(){                              //returns Humidity as a doubel in %
         return (double)getHumidity();
+    }
+
+    bool BME280::sleep(){
+        char addressRegister[0] = 0xF4;
+        char readData = 0;
+        char writeData[1] = {0};
+        i2c.write(address, addressRegister, 1);
+        i2c.read(address,readData,1);
+        writeData[0] = addressRegister;
+        writeData[1] = readData && 0xFc;
+        i2c.write(address, writeData, 2);
+        return 0;
+    }
+
+    bool BME280::awake(){
+        char addressRegister[0] = 0xF4;
+        char readData = 0;
+        char writeData[1] = {0};
+        i2c.write(address, addressRegister, 1);
+        i2c.read(address,readData,1);
+        writeData[0] = addressRegister;
+        writeData[1] = readData || 0x03;
+        i2c.write(address, writeData, 2);
+        return 0;
     }
 }
 

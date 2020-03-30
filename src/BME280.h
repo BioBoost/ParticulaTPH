@@ -2,66 +2,21 @@
 #include "mbed.h"
 
 namespace BME280_TPH{
-    /** BME280 class
-     *
-     *  BME280: A library to correct environmental data using Boshe BME280 environmental sensor device
-     *
-     */ 
     class BME280{
     public:
 
-        /** Create a BME280 instance
-         *  which is connected to specified I2C pins with specified address
-         *
-         * @param sda I2C-bus SDA pin
-         * @param scl I2C-bus SCL pin
-         * @param slave_adr (option) I2C-bus address (default: 0x76)
-         */
-        BME280(PinName sda, PinName sck, char slave_adr);
-
-        /** Create a BME280 instance
-         *  which is connected to specified I2C pins with specified address
-         *
-         * @param i2c_obj I2C object (instance)
-         * @param slave_adr (option) I2C-bus address (default: 0x76)
-         */
-        BME280(I2C &i2c_obj, char slave_adr);
-
-        /** Destructor of BME280
-         */
-        virtual ~BME280();
-
-        /** Initializa BME280 sensor
-         *
-         *  Configure sensor setting and read parameters for calibration
-         *
-         */
-        void initialize(void);
-
-        /** Read the current temperature value (degree Celsius) from BME280 sensor
-         *
-         */
-        float getTemperature(void);
-
-        /** Read the current pressure value (hectopascal)from BME280 sensor
-         *
-         */
-        float getPressure(void);
-
-        /** Read the current humidity value (humidity %) from BME280 sensor
-         *
-         */
-        float getHumidity(void);
+        BME280(PinName sda, PinName sck, char slave_adr);       //Creating a instanstance of the BME280 object without passing a I2C object
+        virtual ~BME280();                                      //Creating a instanstance of the BME280 object with passing a I2C object
+        void initialize(void);                                  //Destructor of a instance of the BME280 object
+        float getTemperature(void);                             //Read the current temperature (in celcuis) as float
+        float getPressure(void);                                //Read the current Presure (in HPa) as float
+        float getHumidity(void);                                //Read the curretn relative humidity (in %) ass float
     //edit
-        double presure(void);
-
-        double temperature(void);
-
-        double humidity(void);
-
-        int sleep();
-
-        int awake();
+        double presure(void);                                   //Read the current Presure (in HPa) as double
+        double temperature(void);                               //Read the current temperature (in celcuis) as float
+        double humidity(void);                                  //Read the curretn relative humidity (in %) ass float
+        bool sleep(void);                                       //Change the mode of the BME280 To Sleep
+        bool awake(void);                                       //Change the mode of the BME280 To Normal
 
     private:
 
