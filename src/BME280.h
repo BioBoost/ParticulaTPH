@@ -6,8 +6,9 @@ namespace BME280_TPH{
     public:
 
         BME280(PinName sda, PinName sck, char slave_adr);       //Creating a instanstance of the BME280 object without passing a I2C object
-        virtual ~BME280();                                      //Creating a instanstance of the BME280 object with passing a I2C object
-        void initialize(void);                                  //Destructor of a instance of the BME280 object
+        BME280(I2C &i2c_obj, char slave_adr);                   //Creating a instanstance of the BME280 object with passing a I2C object
+        virtual ~BME280();                                      //Destructor of a instance of the BME280 object
+        void initialize(void);                                  
         float getTemperature(void);                             //Read the current temperature (in celcuis) as float
         float getPressure(void);                                //Read the current Presure (in HPa) as float
         float getHumidity(void);                                //Read the curretn relative humidity (in %) ass float

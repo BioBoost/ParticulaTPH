@@ -42,7 +42,7 @@ namespace BME280_TPH{
         dig_T2 = (cmd[3] << 8) | cmd[2];
         dig_T3 = (cmd[5] << 8) | cmd[4];
     
-        DEBUG_PRINT("dig_T = 0x%x, 0x%x, 0x%x\n", dig_T1, dig_T2, dig_T3);
+        //DEBUG_PRINT("dig_T = 0x%x, 0x%x, 0x%x\n", dig_T1, dig_T2, dig_T3);
     
         cmd[0] = 0x8E; // read dig_P regs
         i2c.write(address, cmd, 1);
@@ -58,7 +58,7 @@ namespace BME280_TPH{
         dig_P8 = (cmd[15] << 8) | cmd[14];
         dig_P9 = (cmd[17] << 8) | cmd[16];
     
-        DEBUG_PRINT("dig_P = 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x\n", dig_P1, dig_P2, dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9);
+        //DEBUG_PRINT("dig_P = 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x\n", dig_P1, dig_P2, dig_P3, dig_P4, dig_P5, dig_P6, dig_P7, dig_P8, dig_P9);
     
         cmd[0] = 0xA1; // read dig_H regs
         i2c.write(address, cmd, 1);
@@ -74,7 +74,7 @@ namespace BME280_TPH{
         dig_H5 = (cmd[6] << 4) | ((cmd[5]>>4) & 0x0f);
         dig_H6 = cmd[7];
     
-        DEBUG_PRINT("dig_H = 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x\n", dig_H1, dig_H2, dig_H3, dig_H4, dig_H5, dig_H6);
+        //DEBUG_PRINT("dig_H = 0x%x, 0x%x, 0x%x, 0x%x, 0x%x, 0x%x\n", dig_H1, dig_H2, dig_H3, dig_H4, dig_H5, dig_H6);
     }
     
     float BME280::getTemperature()
@@ -181,25 +181,25 @@ namespace BME280_TPH{
     }
 
     bool BME280::sleep(){
-        char addressRegister[0] = 0xF4;
-        char readData = 0;
-        char writeData[1] = {0};
+        char addressRegister[] = {0xF4};
+        char readData[] = {0};
+        char writeData[] = {0,0};
         i2c.write(address, addressRegister, 1);
         i2c.read(address,readData,1);
-        writeData[0] = addressRegister;
-        writeData[1] = readData && 0xFc;
+        writeData[0] = addressRegister[0];
+        writeData[1] = readData[0] && 0xFc;
         i2c.write(address, writeData, 2);
         return 0;
     }
 
     bool BME280::awake(){
-        char addressRegister[0] = 0xF4;
-        char readData = 0;
-        char writeData[1] = {0};
+        char addressRegister[] = {0xF4};
+        char readData[] = {0};
+        char writeData[] = {0,0};
         i2c.write(address, addressRegister, 1);
         i2c.read(address,readData,1);
-        writeData[0] = addressRegister;
-        writeData[1] = readData || 0x03;
+        writeData[0] = addressRegister[0];
+        writeData[1] = readData[0] || 0x03;
         i2c.write(address, writeData, 2);
         return 0;
     }
