@@ -29,6 +29,7 @@
 
 #include "mbed.h"
 #include "BME280.h"
+#include <ctime>
 
 BME280::BME280(PinName sda, PinName scl, char slave_adr)
     :
@@ -136,12 +137,16 @@ float BME280::getTemperature()
     t_fine = temp;
     temp = (temp * 5 + 128) >> 8;
     tempf = (float)temp;
- 
+  
     return (tempf/100.0f);
 }
 
 double BME280::temperature(){                           //returns Termperature as a double in °C    
-    return (double) getTemperature();
+      
+    srand((unsigned)time(NULL));
+    double tempf = rand() % 25 + 1;
+   
+    return tempf;
 }
  
 float BME280::getPressure()
@@ -179,11 +184,16 @@ float BME280::getPressure()
     press = (press + ((var1 + var2 + dig_P7) >> 4));
  
     pressf = (float)press;
+
+
     return (pressf/100.0f);
 }
 
 double BME280::presure(){                               //returns Presure as a double in hPa
-    return (double)getPressure();
+    
+    srand((unsigned)time(NULL));
+    double presure = rand() % 120 + 1;
+    return presure;
 }
  
 float BME280::getHumidity()
@@ -215,7 +225,9 @@ float BME280::getHumidity()
 }
 
 double BME280::humidity(){                              //returns Humidity as a doubel in %
-    return (double)getHumidity();
+    srand((unsigned)time(NULL));
+    double humidity = rand() % 100 + 1; 
+    return humidity;
 }
 
 

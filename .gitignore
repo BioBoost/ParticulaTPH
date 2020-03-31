@@ -1,1 +1,4 @@
-ignore*
+mbed-os/
+.mbed/
+mbed_settings.py/
+build
