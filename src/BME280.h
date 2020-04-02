@@ -126,11 +126,11 @@ public:
      */
     float getHumidity(void);
 //edit
-    double presure(void);
+    double FakePressure(void);
 
-    double temperature(void);
+    double FakeTemperature(void);
 
-    double humidity(void);
+    double FakeHumidity(void);
 
     int sleep();
 

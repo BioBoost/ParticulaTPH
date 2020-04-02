@@ -141,7 +141,7 @@ float BME280::getTemperature()
     return (tempf/100.0f);
 }
 
-double BME280::temperature(){                           //returns Termperature as a double in °C    
+double BME280::FakeTemperature(){                           //returns Termperature as a double in °C    
       
     srand((unsigned)time(NULL));
     double tempf = rand() % 25 + 1;
@@ -189,11 +189,11 @@ float BME280::getPressure()
     return (pressf/100.0f);
 }
 
-double BME280::presure(){                               //returns Presure as a double in hPa
+double BME280::FakePressure(){                               //returns Presure as a double in hPa
     
     srand((unsigned)time(NULL));
-    double presure = rand() % 120 + 1;
-    return presure;
+    double pressure = rand() % 120 + 1;
+    return pressure;
 }
  
 float BME280::getHumidity()
@@ -224,7 +224,7 @@ float BME280::getHumidity()
     return (humf/1024.0f);
 }
 
-double BME280::humidity(){                              //returns Humidity as a doubel in %
+double BME280::FakeHumidity(){                              //returns Humidity as a doubel in %
     srand((unsigned)time(NULL));
     double humidity = rand() % 100 + 1; 
     return humidity;
