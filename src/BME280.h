@@ -31,12 +31,13 @@ namespace Particula{
             int32_t     t_fine;
             //Adress table
             const char 
-            i2cAddress =    0x76 << 1, 
+            i2cAddress =    0x77 << 1, 
             hum_lsb =       0xFE,
             hum_msb =       0xFD,
-            temp_xlsb =     0xF9,
-            temp_lsb =      0xF8,
+            temp_xlsb =     0xFC,
+            temp_lsb =      0xFB,
             temp_msb =      0xFA,
+            pres_xlsb =     0xF9,
             pres_lsb =      0xF8,
             pres_msb =      0xF7, 
             config =        0xF5,
