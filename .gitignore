@@ -1,0 +1,6 @@
+ignore*
+./.mbed
+./mbed_settings.py
+src/settings.h
+BUILD
+mbed-os/
