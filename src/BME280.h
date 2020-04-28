@@ -10,14 +10,14 @@ namespace Particula{
             double humidity(void);                                  //Read the curretn relative humidity (in %) ass float
             void sleep(void);                                       //Change the mode of the BME280 To Sleep
             void awake(void);                                       //Change the mode of the BME280 To Normal
+            int adc_temperature(void);
         private:
             I2C * i2cBus;
             void setMode(unsigned int mode);
             void loadSettings(void);
             void readCalibration(void);
             // As charpter 8 in the datasheet
-            int adc_temperature(void);
-            double compensate_temperature(int adc_T);     
+            double compensate_temperature(int adc_T);
             int adc_presure(void);
             double compensate_presure(int adc_P);             
             int adc_humidity(void);
