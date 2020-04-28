@@ -4,23 +4,20 @@
 namespace Particula{
     BME280::BME280(I2C * i2cBus){
         this->i2cBus = i2cBus;
-        //setMode(0);
         loadSettings();
         readCalibration();
+        setMode(0);
     }
 
     double BME280::presure(void){
-        //return adc_presure();
         return compensate_presure(adc_presure());
     }
 
     double BME280::temperature(void){
-        //return (double)adc_temperature();
         return compensate_temperature(adc_temperature());
     }
 
     double BME280::humidity(void){
-        //return adc_humidity();
         return compensate_humidity(adc_humidity());
     }
 
@@ -36,7 +33,7 @@ namespace Particula{
         char setMode;
         switch (mode){
         case 1:                     //Normal Mode
-            setMode = 0x03;
+            setMode = 0x27;  //0x03;
             break;
         case 2:                     //Froced Mode 1
             setMode = 0x01;
@@ -48,18 +45,14 @@ namespace Particula{
             setMode = 0x00;
             break;
         }
-        char data[] = {ctrl_meas, 0x00};
-        i2cBus->write(i2cAddress, data, 1);
-        i2cBus->read(i2cAddress, data, 1);
-        data[1] = data[1] || setMode;
-        data[0] = ctrl_meas;
+        char data[] = {ctrl_meas, setMode};
         i2cBus->write(i2cAddress, data, 2);
     }
 
     void BME280::loadSettings(void){
-        char data[] = {config, 0xa0};               //Disable filter, standby time 0.5ms and spi is off
+        char data[] = {config, 0x00};               //Disable filter, standby time 0.5ms and spi is off
         i2cBus->write(i2cAddress, data, 2);
-        data[1] = 0x27;                             //sleep mode, oversapming x1 for temp and presure (24)
+        data[1] = 0x27;                             //sleep mode, oversapming x1 for temp and presure
         data[0] = ctrl_meas;
         i2cBus->write(i2cAddress, data, 2);
         data[0] = ctrl_hum;
@@ -116,7 +109,7 @@ namespace Particula{
         t_fine = (int32_t)(var1 + var2);
         T = (var1 + var2) / 5120.0;
         return T;
-    }
+    }   //Source is datasheet for BME280
 
     int BME280::adc_presure(void){
         char data[3];
@@ -145,7 +138,7 @@ namespace Particula{
         p = p + (var1 + var2 + ((double)dig_P7)) / 16.0;
         p = p / 100;                                                    // measurment was off by 100 #CONTROLE
         return p;
-    }
+    }   //Source is datasheet for BME280
 
     int BME280::adc_humidity(void){
         char data[2];
@@ -167,6 +160,6 @@ namespace Particula{
         else if (var_H < 0.0)
         var_H = 0.0;
         return var_H;
-    }
+    }   //Source is datasheet for BME280
 }
 
