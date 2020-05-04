@@ -13,7 +13,7 @@ namespace Particula{
         return pres_prev_log = compensate_presure(adc_presure());
     }
 
-    double BME280::presure(bool success){
+    double BME280::presure(bool success){                               //bool: was this successfull
         double presure_current = compensate_presure(adc_presure());
         success = (presure_current != pres_prev_log);
         return pres_prev_log = presure_current;
@@ -23,7 +23,7 @@ namespace Particula{
         return temp_prev_log = compensate_temperature(adc_temperature());
     }
 
-    double BME280::temperature(bool success){
+    double BME280::temperature(bool success){                           //bool: was this successfull
         double temperature_current = compensate_temperature(adc_temperature());
         success = (temperature_current != temp_prev_log);
         return temp_prev_log = temperature_current;
@@ -33,13 +33,13 @@ namespace Particula{
         return humi_prev_log = compensate_humidity(adc_humidity());
     }
 
-    double BME280::humidity(bool success){
+    double BME280::humidity(bool success){                              //bool: was this successfull
         double humidity_current = compensate_humidity(adc_humidity());
         success = (humidity_current != humi_prev_log);
         return humi_prev_log = humidity_current;
     }
 
-    bool BME280::sleep(void){
+    bool BME280::sleep(void){                   //bool: was this successfull
         set_mode(0);
         char data[] = {ctrl_meas};
         i2c_bus->write(i2c_address, data, 1);
@@ -47,7 +47,7 @@ namespace Particula{
         return data[0] == ctrl_meas_sleep;
     }
 
-    bool BME280::awake(void){
+    bool BME280::awake(void){                   //bool: was this successfull
         set_mode(1);
         char data[] = {ctrl_meas};
         i2c_bus->write(i2c_address, data, 1);
@@ -55,7 +55,7 @@ namespace Particula{
         return data[0] == ctrl_meas_normal;
     }
 
-    bool BME280::present(){
+    bool BME280::present(){                     //Is the sensor present?
         load_settings();
         char data[4];
         data[0] = ctrl_hum;
