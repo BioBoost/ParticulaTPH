@@ -10,30 +10,33 @@ namespace Particula{
     }
 
     double BME280::presure(void){
-        return compensate_presure(adc_presure());
+        return pres_prev_log = compensate_presure(adc_presure());
     }
 
     double BME280::presure(bool success){
-        // #TODO
-        return compensate_presure(adc_presure());
+        double presure_current = compensate_presure(adc_presure());
+        success = (presure_current != pres_prev_log);
+        return pres_prev_log = presure_current;
     }
 
     double BME280::temperature(void){
-        return compensate_temperature(adc_temperature());
+        return temp_prev_log = compensate_temperature(adc_temperature());
     }
 
     double BME280::temperature(bool success){
-        // #TODO
-        return compensate_temperature(adc_temperature());
+        double temperature_current = compensate_temperature(adc_temperature());
+        success = (temperature_current != temp_prev_log);
+        return temp_prev_log = temperature_current;
     }
 
     double BME280::humidity(void){
-        return compensate_humidity(adc_humidity());
+        return humi_prev_log = compensate_humidity(adc_humidity());
     }
 
     double BME280::humidity(bool success){
-        // #TODO
-        return compensate_humidity(adc_humidity());
+        double humidity_current = compensate_humidity(adc_humidity());
+        success = (humidity_current != humi_prev_log);
+        return humi_prev_log = humidity_current;
     }
 
     bool BME280::sleep(void){

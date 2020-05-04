@@ -30,7 +30,10 @@ namespace Particula{
             double 
             compensate_temperature(int adc_T),
             compensate_presure(int adc_P),         
-            compensate_humidity(int adc_H);           
+            compensate_humidity(int adc_H),
+            pres_prev_log,
+            temp_prev_log,
+            humi_prev_log;
             uint16_t    dig_T1;
             int16_t     dig_T2, dig_T3;
             uint16_t    dig_P1;
