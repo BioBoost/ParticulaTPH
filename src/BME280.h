@@ -7,11 +7,11 @@ namespace Particula{
             BME280(I2C * i2cBus);
             double
             presure(void),                                   //Read the current Presure (in HPa) as double
-            presure(bool success),
+            presure(bool * success),
             temperature(void),                               //Read the current temperature (in celcuis) as float
-            temperature(bool success),
+            temperature(bool * success),
             humidity(void),                                  //Read the curretn relative humidity (in %) ass float
-            humidity(bool success);
+            humidity(bool * success);
             bool
             sleep(void),                                       //Change the mode of the BME280 To Sleep
             awake(void),                                       //Change the mode of the BME280 To Normal
