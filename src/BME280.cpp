@@ -2,14 +2,19 @@
 #include "BME280.h"
 
 namespace Particula{
-    BME280::BME280(I2C * i2cBus){
-        this->i2cBus = i2cBus;
-        loadSettings();
-        readCalibration();
-        setMode(0);
+    BME280::BME280(I2C * i2c_bus){
+        this->i2c_bus = i2c_bus;        //Passing a refference to the i2c-object
+        load_settings();                //Loading all the settings
+        read_calibration();
+        set_mode(0);
     }
 
     double BME280::presure(void){
+        return compensate_presure(adc_presure());
+    }
+
+    double BME280::presure(bool success){
+        // #TODO
         return compensate_presure(adc_presure());
     }
 
@@ -17,54 +22,81 @@ namespace Particula{
         return compensate_temperature(adc_temperature());
     }
 
+    double BME280::temperature(bool success){
+        // #TODO
+        return compensate_temperature(adc_temperature());
+    }
+
     double BME280::humidity(void){
         return compensate_humidity(adc_humidity());
     }
 
-    void BME280::sleep(void){
-        setMode(0);
+    double BME280::humidity(bool success){
+        // #TODO
+        return compensate_humidity(adc_humidity());
     }
 
-    void BME280::awake(void){
-        setMode(1);
+    bool BME280::sleep(void){
+        set_mode(0);
+        char data[] = {ctrl_meas};
+        i2c_bus->write(i2c_address, data, 1);
+        i2c_bus->write(i2c_address, data, 1);
+        return data[0] == ctrl_meas_sleep;
     }
 
-    void BME280::setMode(unsigned int mode){
-        char setMode;
+    bool BME280::awake(void){
+        set_mode(1);
+        char data[] = {ctrl_meas};
+        i2c_bus->write(i2c_address, data, 1);
+        i2c_bus->write(i2c_address, data, 1);
+        return data[0] == ctrl_meas_normal;
+    }
+
+    bool BME280::present(){
+        load_settings();
+        char data[4];
+        data[0] = ctrl_hum;
+        i2c_bus->write(i2c_address, data, 1);
+        i2c_bus->read(i2c_address, data, 4);
+        return (data[0] == ctrl_hum_data) && (data[2] == ctrl_meas_sleep) && (data[3] == config_data);
+    }
+
+    void BME280::set_mode(unsigned int mode){
+        char set_mode;
         switch (mode){
         case 1:                     //Normal Mode
-            setMode = 0x27;  //0x03;
+            set_mode = ctrl_meas_normal;
             break;
         case 2:                     //Froced Mode 1
-            setMode = 0x01;
+            set_mode = ctrl_meas_forced_1;
             break;
         case 3:                     //Forced Mode 2
-            setMode = 0x02;
+            set_mode = ctrl_meas_forced_2;
             break;        
         default:                    //Sleep Mode
-            setMode = 0x00;
+            set_mode = ctrl_meas_sleep;
             break;
         }
-        char data[] = {ctrl_meas, setMode};
-        i2cBus->write(i2cAddress, data, 2);
+        char data[] = {ctrl_meas, set_mode};
+        i2c_bus->write(i2c_address, data, 2);
     }
 
-    void BME280::loadSettings(void){
-        char data[] = {config, 0x00};               //Disable filter, standby time 0.5ms and spi is off
-        i2cBus->write(i2cAddress, data, 2);
-        data[1] = 0x27;                             //sleep mode, oversapming x1 for temp and presure
+    void BME280::load_settings(void){
+        char data[] = {config, config_data};               //Disable filter, standby time 0.5ms and spi is off
+        i2c_bus->write(i2c_address, data, 2);
+        data[1] = ctrl_meas_sleep;                             //sleep mode, oversapming x1 for temp and presure
         data[0] = ctrl_meas;
-        i2cBus->write(i2cAddress, data, 2);
+        i2c_bus->write(i2c_address, data, 2);
         data[0] = ctrl_hum;
-        data[1]  = 0x01;                            //oversampling x1 hum
-        i2cBus->write(i2cAddress, data, 2);
+        data[1]  = ctrl_hum_data;                            //oversampling x1 hum
+        i2c_bus->write(i2c_address, data, 2);
     }
 
-    void BME280::readCalibration(void){
+    void BME280::read_calibration(void){
         char data[25];
         data[0] = calib00;
-        i2cBus->write(i2cAddress, data, 1);
-        i2cBus->read(i2cAddress, data, 25);
+        i2c_bus->write(i2c_address, data, 1);
+        i2c_bus->read(i2c_address, data, 25);
 
         dig_T1 = (data[ 1] << 8) | data[ 0];
         dig_T2 = (data[ 3] << 8) | data[ 2];
@@ -83,8 +115,8 @@ namespace Particula{
         dig_H1 = data[24];
 
         data[0] = calib26;
-        i2cBus->write(i2cAddress, data, 1);
-        i2cBus->read(i2cAddress, data, 7);
+        i2c_bus->write(i2c_address, data, 1);
+        i2c_bus->read(i2c_address, data, 7);
 
         dig_H2 = (data[1] << 8) | data[0];
         dig_H3 = data[2];
@@ -96,8 +128,8 @@ namespace Particula{
     int BME280::adc_temperature(void){
         char data[3];
         data[0] = temp_msb;
-        i2cBus->write(i2cAddress, data, 1);
-        i2cBus->read(i2cAddress, data, 3);
+        i2c_bus->write(i2c_address, data, 1);
+        i2c_bus->read(i2c_address, data, 3);
         return (int32_t)(((data[0] << 16) | (data[1] << 8) | data[2])>>4);
     }
 
@@ -114,8 +146,8 @@ namespace Particula{
     int BME280::adc_presure(void){
         char data[3];
         data[0] = pres_msb;
-        i2cBus->write(i2cAddress, data, 1);
-        i2cBus->read(i2cAddress, data, 3);
+        i2c_bus->write(i2c_address, data, 1);
+        i2c_bus->read(i2c_address, data, 3);
         return (int32_t)(((data[0] << 16) | (data[1] << 8) | (data[2]))>>4); 
     }
 
@@ -143,8 +175,8 @@ namespace Particula{
     int BME280::adc_humidity(void){
         char data[2];
         data[0] = hum_msb;
-        i2cBus->write(i2cAddress, data, 1);
-        i2cBus->read(i2cAddress, data, 2);
+        i2c_bus->write(i2c_address, data, 1);
+        i2c_bus->read(i2c_address, data, 2);
         return(int32_t)(data[0] << 8) | data[1];
     }
 

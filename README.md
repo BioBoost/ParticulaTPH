@@ -64,11 +64,9 @@ Now you have imported the library, now you still need to add it to you code by i
 ```
 #include "BME280.h"
 ```
-We need to give our device the right addess:  
-```
-char addr = 0x76 << 1;  // We need to shift the address 1 bit because mbed uses 8 bit addresses forr the I2C bus
-```
+
 There still is the problem left of defining your pinout so the microcontroller can comunicate with the sesor:  
 ```
-BME280 TphI2c = BME280(SDA, SCL, addr);
+mbed::I2C i2c_com(SDA, SCL);
+BME280 tph_sensor = BME280(&i2c_com);
 ```
