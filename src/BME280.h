@@ -14,7 +14,7 @@ namespace Particula{
             humidity(bool success);
             bool
             sleep(void),                                       //Change the mode of the BME280 To Sleep
-            awake(void);                                       //Change the mode of the BME280 To Normal
+            awake(void),                                       //Change the mode of the BME280 To Normal
             present(void);
         private:
             I2C * i2c_bus;
