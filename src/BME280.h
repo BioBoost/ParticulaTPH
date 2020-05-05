@@ -31,15 +31,16 @@ namespace Particula{
             adc_temperature(void),
             adc_presure(void),
             adc_humidity(void);
-            /*----------------------As charpter 8 in the datasheet---------------------------*/
-            double 
-            compensate_temperature(int adc_T),
-            compensate_presure(int adc_P),         
-            compensate_humidity(int adc_H),
             /*------------For logging if the previous measurement is correct-----------------*/
+            double 
             pres_prev_log,
             temp_prev_log,
             humi_prev_log;
+            /*======================As charpter 8 in the datasheet===========================*/
+            double
+            compensate_temperature(int adc_T),
+            compensate_presure(int adc_P),         
+            compensate_humidity(int adc_H);
             /*--------------Unsigned 16bit integers for calculating the output---------------*/
             uint16_t
             //Temperature
