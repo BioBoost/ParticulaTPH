@@ -51,7 +51,7 @@ namespace Particula{
             config_data = 0x00;
             //Adress table (pulled from datasheet)
             const char 
-            i2c_address =    0x77 << 1, 
+            i2c_address =    0x76 << 1, 
             hum_lsb =       0xFE,
             hum_msb =       0xFD,
             temp_xlsb =     0xFC,
