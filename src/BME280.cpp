@@ -5,41 +5,66 @@ namespace Particula{
     BME280::BME280(I2C * i2c_bus){
         this->i2c_bus = i2c_bus;        //Passing a refference to the i2c-object
         load_settings();                //Loading all the settings
-        read_calibration();
-        set_mode(0);
+        read_calibration();             //Reading the calibration data form the sensor to local variables
+        set_mode(0);                    //Set the mode of the BME280 to Sleep
     }
 
+    /*
+    Returning the value of the presure that the sensor has measured
+    */
     double BME280::presure(void){
         return pres_prev_log = compensate_presure(adc_presure());
     }
 
-    double BME280::presure(bool * success){                               //bool: was this successfull
+    /*
+    Returning the value of the presure that the sensor has measured
+    Changing a value of a pointer so that we can track if the previous measurement was correct
+    */
+    double BME280::presure(bool * success){
         double presure_current = compensate_presure(adc_presure());
         success[0] = (presure_current != pres_prev_log);
         return pres_prev_log = presure_current;
     }
 
+    /*
+    Returning the value of the temperature that the sensor has measured
+    */
     double BME280::temperature(void){
         return temp_prev_log = compensate_temperature(adc_temperature());
     }
 
-    double BME280::temperature(bool * success){                           //bool: was this successfull
+    /*
+    Returning the value of the temperature that the sensor has measured
+    Changing a value of a pointer so that we can track if the previous measurement was correct
+    */
+    double BME280::temperature(bool * success){
         double temperature_current = compensate_temperature(adc_temperature());
         success[0] = (temperature_current != temp_prev_log);
         return temp_prev_log = temperature_current;
     }
 
+    /*
+    Returning the value of the humidity that the sensor has measured
+    */
     double BME280::humidity(void){
         return humi_prev_log = compensate_humidity(adc_humidity());
     }
 
-    double BME280::humidity(bool * success){                              //bool: was this successfull
+    /*
+    Returning the value of the humidity that the sensor has measured
+    Changing a value of a pointer so that we can track if the previous measurement was correct
+    */
+    double BME280::humidity(bool * success){
         double humidity_current = compensate_humidity(adc_humidity());
         success[0] = (humidity_current != humi_prev_log);
         return humi_prev_log = humidity_current;
     }
 
-    bool BME280::sleep(void){                   //bool: was this successfull
+    /*
+    Changing the mode that the sensor is in to Sleep
+    Returing if the mode was set succesfully
+    */
+    bool BME280::sleep(void){
         set_mode(0);
         char data[] = {ctrl_meas};
         i2c_bus->write(i2c_address, data, 1);
@@ -47,7 +72,11 @@ namespace Particula{
         return data[0] == ctrl_meas_sleep;
     }
 
-    bool BME280::awake(void){                   //bool: was this successfull
+    /*
+    Changing the mode that the sensor is in to Normal
+    Returing if the mode was set succesfully
+    */
+    bool BME280::awake(void){
         set_mode(1);
         char data[] = {ctrl_meas};
         i2c_bus->write(i2c_address, data, 1);
@@ -55,7 +84,10 @@ namespace Particula{
         return data[0] == ctrl_meas_normal;
     }
 
-    bool BME280::present(){                     //Is the sensor present?
+    /*
+    Returning if the sensor is accesable from the microcontroler, in other words is the sensor present?
+    */
+    bool BME280::present(){
         load_settings();
         char data[4];
         data[0] = ctrl_hum;
@@ -64,19 +96,23 @@ namespace Particula{
         return (data[0] == ctrl_hum_data) && (data[2] == ctrl_meas_sleep) && (data[3] == config_data);
     }
 
+    /*
+    Setting 1 out of 4 difrent modes
+    The default mode is Sleep
+    */
     void BME280::set_mode(unsigned int mode){
         char set_mode;
         switch (mode){
-        case 1:                     //Normal Mode
+        case 1:     //Normal Mode
             set_mode = ctrl_meas_normal;
             break;
-        case 2:                     //Froced Mode 1
+        case 2:     //Froced Mode 1
             set_mode = ctrl_meas_forced_1;
             break;
-        case 3:                     //Forced Mode 2
+        case 3:     //Forced Mode 2
             set_mode = ctrl_meas_forced_2;
             break;        
-        default:                    //Sleep Mode
+        default:    //Sleep Mode
             set_mode = ctrl_meas_sleep;
             break;
         }
@@ -84,17 +120,23 @@ namespace Particula{
         i2c_bus->write(i2c_address, data, 2);
     }
 
+    /*
+    Loading the settings that we definend in the BME280.h
+    */
     void BME280::load_settings(void){
-        char data[] = {config, config_data};               //Disable filter, standby time 0.5ms and spi is off
+        char data[] = {config, config_data};
         i2c_bus->write(i2c_address, data, 2);
-        data[1] = ctrl_meas_sleep;                             //sleep mode, oversapming x1 for temp and presure
+        data[1] = ctrl_meas_sleep;
         data[0] = ctrl_meas;
         i2c_bus->write(i2c_address, data, 2);
         data[0] = ctrl_hum;
-        data[1]  = ctrl_hum_data;                            //oversampling x1 hum
+        data[1]  = ctrl_hum_data;
         i2c_bus->write(i2c_address, data, 2);
     }
 
+    /*
+    Reading the calibration data that the manufacturer put in the chip
+    */
     void BME280::read_calibration(void){
         char data[25];
         data[0] = calib00;
@@ -128,6 +170,9 @@ namespace Particula{
         dig_H6 = data[6];
     }
 
+    /*
+    Translating the data in the registers to a raw calculatble value for the temperature
+    */
     int BME280::adc_temperature(void){
         char data[3];
         data[0] = temp_msb;
@@ -136,6 +181,10 @@ namespace Particula{
         return (int32_t)(((data[0] << 16) | (data[1] << 8) | data[2])>>4);
     }
 
+    /*
+    Source is datasheet for BME280
+    Calculating the Tempurature that the sensor has measured and returning it as a double
+    */
     double BME280::compensate_temperature(int adc_T){
         double var1, var2, T;
         var1 = (((double)adc_T)/16384.0 - ((double)dig_T1)/1024.0) * ((double)dig_T2);
@@ -144,8 +193,11 @@ namespace Particula{
         t_fine = (int32_t)(var1 + var2);
         T = (var1 + var2) / 5120.0;
         return T;
-    }   //Source is datasheet for BME280
-
+    }
+    
+    /*
+    Translating the data in the registers to a raw calculatble value for the presure
+    */
     int BME280::adc_presure(void){
         char data[3];
         data[0] = pres_msb;
@@ -154,6 +206,10 @@ namespace Particula{
         return (int32_t)(((data[0] << 16) | (data[1] << 8) | (data[2]))>>4); 
     }
 
+    /*
+    Source is datasheet for BME280
+    Calculating the Presure that the sensor has measured and returning it as a double
+    */
     double BME280::compensate_presure(int adc_P){
         double var1, var2, p;
         var1 = ((double)t_fine/2.0) - 64000.0;
@@ -173,8 +229,11 @@ namespace Particula{
         p = p + (var1 + var2 + ((double)dig_P7)) / 16.0;
         p = p / 100;                                                    // measurment was off by 100 #CONTROLE
         return p;
-    }   //Source is datasheet for BME280
-
+    }
+    
+    /*
+    Translating the data in the registers to a raw calculatble value for the humidity
+    */
     int BME280::adc_humidity(void){
         char data[2];
         data[0] = hum_msb;
@@ -183,6 +242,10 @@ namespace Particula{
         return(int32_t)(data[0] << 8) | data[1];
     }
 
+    /*
+    Source is datasheet for BME280
+    Calculating the Humidity that the sensor has measured and returning it as a double
+    */
     double BME280::compensate_humidity(int adc_H){
         double var_H;
         var_H = (((double)t_fine) - 76800.0);
@@ -195,6 +258,6 @@ namespace Particula{
         else if (var_H < 0.0)
         var_H = 0.0;
         return var_H;
-    }   //Source is datasheet for BME280
+    }
 }
 
