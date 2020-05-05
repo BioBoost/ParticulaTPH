@@ -88,7 +88,7 @@ namespace Particula{
             /*---------------------------Adress table from datasheet--------------------------*/
             const char 
             //We need the shift the address 1 bit, the datasheet address is only 7 bits
-            i2c_address =    0x76 << 1,
+            i2c_address =   0x77 << 1,
             hum_lsb =       0xFE,
             hum_msb =       0xFD,
             temp_xlsb =     0xFC,

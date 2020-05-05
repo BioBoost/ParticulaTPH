@@ -22,7 +22,7 @@ namespace Particula{
     */
     double BME280::presure(bool * success){
         double presure_current = compensate_presure(adc_presure());
-        success[0] = (presure_current != pres_prev_log);
+        success[0] = (presure_current != pres_prev_log) && (compensate_temperature(0) != presure_current);
         return pres_prev_log = presure_current;
     }
 
@@ -39,7 +39,7 @@ namespace Particula{
     */
     double BME280::temperature(bool * success){
         double temperature_current = compensate_temperature(adc_temperature());
-        success[0] = (temperature_current != temp_prev_log);
+        success[0] = (temperature_current != temp_prev_log) && (compensate_temperature(0) != temperature_current);
         return temp_prev_log = temperature_current;
     }
 
@@ -56,7 +56,7 @@ namespace Particula{
     */
     double BME280::humidity(bool * success){
         double humidity_current = compensate_humidity(adc_humidity());
-        success[0] = (humidity_current != humi_prev_log);
+        success[0] = (humidity_current != humi_prev_log) && (compensate_humidity(0) != humidity_current);
         return humi_prev_log = humidity_current;
     }
 
