@@ -23,5 +23,5 @@ namespace Patricula{
             const char calib25 =       0xA1;
             const char calib26 =       0xE1;
             const char calib41 =       0xF0;
-    }
+    };
 }

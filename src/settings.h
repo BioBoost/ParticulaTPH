@@ -23,5 +23,5 @@ namespace Patricula{
             //Disable filter, standby time 0.5ms and spi is off
             const char config_data = 0x00;
             
-    }
+    };
 }
