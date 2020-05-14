@@ -4,7 +4,8 @@
 namespace Particula{
     class BME280{
         public:
-            BME280(I2C * i2cBus, char i2c_address);
+            BME280(I2C * i2c_bus);
+            BME280(I2C * i2c_bus, char i2c_address);
             double presure(void);                  //Read the current Presure (in HPa) as double
             double presure(bool * success);
             double temperature(void);              //Read the current temperature (in Celcuis) as double
