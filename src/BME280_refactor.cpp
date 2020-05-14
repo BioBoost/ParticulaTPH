@@ -1,5 +1,5 @@
 #include "mbed.h"
-#include "BME280.h"
+#include "BME280_refactor.h"
 
 namespace Particula{
     BME280::BME280(I2C * i2c_bus):
