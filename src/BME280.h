@@ -1,7 +1,5 @@
 #pragma once
 #include "mbed.h"
-#include "settings.h"
-#include "BmeRegisteryAdresses.h"
 
 namespace Particula{
     class BME280{
@@ -65,6 +63,7 @@ namespace Particula{
             int16_t dig_H6;
             /*---Signed 32 bit integer for comensation calculations in Humidity and presure---*/
             int32_t     t_fine;
-            
+            #include "BmeRegisteryAdresses.h"
+            #include "settings.h"
     };
 }
