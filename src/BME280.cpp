@@ -2,8 +2,10 @@
 #include "BME280.h"
 
 namespace Particula{
-    BME280::BME280(I2C * i2c_bus, char i2c_address):
-    BME280 (i2c_bus, 0x77){
+    BME280::BME280(I2C * i2c_bus):
+    BME280 (i2c_bus, 0x77){}
+    
+    BME280::BME280(I2C * i2c_bus, char i2c_address){
         this->i2c_bus = i2c_bus;                //Passing a refference to the i2c-object
         this->i2c_address = i2c_address << 1;   //We need to shift the adress 1 bit to make it an 8 bit address
         load_settings();                        //Loading all the settings
