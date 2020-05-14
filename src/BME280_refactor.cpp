@@ -3,7 +3,7 @@
 
 namespace Particula{
     BME280::BME280(I2C * i2c_bus):
-    BME280 (i2c_bus, 0x77){;}
+    BME280 (i2c_bus, 0x76){;}
     
     BME280::BME280(I2C * i2c_bus, char i2c_address){
         this->i2c_bus = i2c_bus;                //Passing a refference to the i2c-object
@@ -17,7 +17,7 @@ namespace Particula{
     Returning the value of the presure that the sensor has measured
     */
     double BME280::presure(void){
-        return pres_prev_log = compensate_presure(adc_presure());
+        return pres_prev_log = compensate_presure(adc(pres_msb, 3));
     }
 
     /*
@@ -25,7 +25,7 @@ namespace Particula{
     Changing a value of a pointer so that we can track if the previous measurement was correct
     */
     double BME280::presure(bool * success){
-        double presure_current = compensate_presure(adc_presure());
+        double presure_current = compensate_presure(adc(pres_msb, 3));
         success[0] = (presure_current != pres_prev_log) && (compensate_temperature(0) != presure_current);
         return pres_prev_log = presure_current;
     }
@@ -34,7 +34,7 @@ namespace Particula{
     Returning the value of the temperature that the sensor has measured
     */
     double BME280::temperature(void){
-        return temp_prev_log = compensate_temperature(adc_temperature());
+        return temp_prev_log = compensate_temperature(adc(temp_msb,3));
     }
 
     /*
@@ -42,7 +42,7 @@ namespace Particula{
     Changing a value of a pointer so that we can track if the previous measurement was correct
     */
     double BME280::temperature(bool * success){
-        double temperature_current = compensate_temperature(adc_temperature());
+        double temperature_current = compensate_temperature(adc(temp_msb,3));
         success[0] = (temperature_current != temp_prev_log) && (compensate_temperature(0) != temperature_current);
         return temp_prev_log = temperature_current;
     }
@@ -51,7 +51,7 @@ namespace Particula{
     Returning the value of the humidity that the sensor has measured
     */
     double BME280::humidity(void){
-        return humi_prev_log = compensate_humidity(adc_humidity());
+        return humi_prev_log = compensate_humidity(adc(hum_msb, 2));
     }
 
     /*
@@ -59,7 +59,7 @@ namespace Particula{
     Changing a value of a pointer so that we can track if the previous measurement was correct
     */
     double BME280::humidity(bool * success){
-        double humidity_current = compensate_humidity(adc_humidity());
+        double humidity_current = compensate_humidity(adc(hum_msb, 2));
         success[0] = (humidity_current != humi_prev_log) && (compensate_humidity(0) != humidity_current);
         return humi_prev_log = humidity_current;
     }
@@ -72,7 +72,7 @@ namespace Particula{
         set_mode(0);
         char data[] = {ctrl_meas};
         i2c_bus->write(i2c_address, data, 1);
-        i2c_bus->write(i2c_address, data, 1);
+        i2c_bus->read(i2c_address, data, 1);
         return data[0] == ctrl_meas_sleep;
     }
 
@@ -84,7 +84,7 @@ namespace Particula{
         set_mode(1);
         char data[] = {ctrl_meas};
         i2c_bus->write(i2c_address, data, 1);
-        i2c_bus->write(i2c_address, data, 1);
+        i2c_bus->read(i2c_address, data, 1);
         return data[0] == ctrl_meas_normal;
     }
 
@@ -175,17 +175,6 @@ namespace Particula{
     }
 
     /*
-    Translating the data in the registers to a raw calculatble value for the temperature
-    */
-    int BME280::adc_temperature(void){
-        char data[3];
-        data[0] = temp_msb;
-        i2c_bus->write(i2c_address, data, 1);
-        i2c_bus->read(i2c_address, data, 3);
-        return (int32_t)(((data[0] << 16) | (data[1] << 8) | data[2])>>4);
-    }
-
-    /*
     Source is datasheet for BME280
     Calculating the Tempurature that the sensor has measured and returning it as a double
     */
@@ -197,17 +186,6 @@ namespace Particula{
         t_fine = (int32_t)(var1 + var2);
         T = (var1 + var2) / 5120.0;
         return T;
-    }
-    
-    /*
-    Translating the data in the registers to a raw calculatble value for the presure
-    */
-    int BME280::adc_presure(void){
-        char data[3];
-        data[0] = pres_msb;
-        i2c_bus->write(i2c_address, data, 1);
-        i2c_bus->read(i2c_address, data, 3);
-        return (int32_t)(((data[0] << 16) | (data[1] << 8) | (data[2]))>>4); 
     }
 
     /*
@@ -234,17 +212,6 @@ namespace Particula{
         p = p / 100;                                                    // measurment was off by 100 #CONTROLE
         return p;
     }
-    
-    /*
-    Translating the data in the registers to a raw calculatble value for the humidity
-    */
-    int BME280::adc_humidity(void){
-        char data[2];
-        data[0] = hum_msb;
-        i2c_bus->write(i2c_address, data, 1);
-        i2c_bus->read(i2c_address, data, 2);
-        return(int32_t)(data[0] << 8) | data[1];
-    }
 
     /*
     Source is datasheet for BME280
@@ -262,6 +229,17 @@ namespace Particula{
         else if (var_H < 0.0)
         var_H = 0.0;
         return var_H;
+    }
+
+    /*
+    Translating the data in the registers to a raw calculatble value
+    */
+    int BME280::adc(char reg_address, int length){
+        char data[length];
+        data[0] = reg_address;
+        i2c_bus->write(i2c_address, data, 1);
+        i2c_bus->read(i2c_address, data, length);
+        return (int32_t)(((data[0] << 16) | (data[1] << 8) | (data[2]))>>4); 
     }
 }
 

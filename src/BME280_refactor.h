@@ -22,16 +22,10 @@ namespace Particula{
             void set_mode(unsigned int mode);
             //For writing the settings to the sensor
             void load_settings(void);
-            
-            
-            
-            
             //For reading the calibration data from the sensor to variables
             void read_calibration(void);
             /*------------------For converting raw data to a calculatble value---------------*/
-            int adc_temperature(void);
-            int adc_presure(void);
-            int adc_humidity(void);
+            int adc(char reg_address, int length);
             /*======================As charpter 8 in the datasheet===========================*/
             double compensate_temperature(int adc_T);
             double compensate_presure(int adc_P);         
@@ -64,11 +58,6 @@ namespace Particula{
             int16_t dig_H6;
             /*---Signed 32 bit integer for comensation calculations in Humidity and presure---*/
             int32_t     t_fine;
-            
-            
-
-
-            
             /*------------For logging if the previous measurement is correct-----------------*/
             double pres_prev_log;
             double temp_prev_log;
@@ -86,7 +75,6 @@ namespace Particula{
             const char ctrl_hum_data = 0x01;
             //Disable filter, standby time 0.5ms and spi is off
             const char config_data = 0x00;
-            
             /*---------------------------Adress table from datasheet--------------------------*/
             char i2c_address;
             const char hum_lsb =       0xFE;
