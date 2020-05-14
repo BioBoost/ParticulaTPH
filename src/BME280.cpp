@@ -68,7 +68,7 @@ namespace Particula{
         set_mode(0);
         char data[] = {ctrl_meas};
         i2c_bus->write(i2c_address, data, 1);
-        i2c_bus->write(i2c_address, data, 1);
+        i2c_bus->read(i2c_address, data, 1);
         return data[0] == ctrl_meas_sleep;
     }
 
@@ -80,7 +80,7 @@ namespace Particula{
         set_mode(1);
         char data[] = {ctrl_meas};
         i2c_bus->write(i2c_address, data, 1);
-        i2c_bus->write(i2c_address, data, 1);
+        i2c_bus->read(i2c_address, data, 1);
         return data[0] == ctrl_meas_normal;
     }
 
