@@ -3,7 +3,7 @@
 
 namespace Particula{
     BME280::BME280(I2C * i2c_bus):
-    BME280 (i2c_bus, 0x77){}
+    BME280 (i2c_bus, 0x77){;}
     
     BME280::BME280(I2C * i2c_bus, char i2c_address){
         this->i2c_bus = i2c_bus;                //Passing a refference to the i2c-object
@@ -11,13 +11,6 @@ namespace Particula{
         load_settings();                        //Loading all the settings
         read_calibration();                     //Reading the calibration data form the sensor to local variables
         set_mode(0);                            //Set the mode of the BME280 to Sleep
-    }
-    
-    BME280::BME280(I2C * i2c_bus){
-        this->i2c_bus = i2c_bus;        //Passing a refference to the i2c-object
-        load_settings();                //Loading all the settings
-        read_calibration();             //Reading the calibration data form the sensor to local variables
-        set_mode(0);                    //Set the mode of the BME280 to Sleep
     }
 
     /*
