@@ -26,8 +26,8 @@ namespace Particula{
             //For reading the calibration data from the sensor to variables
             void read_calibration(void);
             /*------------------For converting raw data to a calculatble value---------------*/
-            int adc_temperature(void),
-            int adc_presure(void),
+            int adc_temperature(void);
+            int adc_presure(void);
             int adc_humidity(void);
             /*------------For logging if the previous measurement is correct-----------------*/
             double pres_prev_log;
