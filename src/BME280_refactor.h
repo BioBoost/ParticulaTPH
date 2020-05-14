@@ -30,34 +30,30 @@ namespace Particula{
             double compensate_temperature(int adc_T);
             double compensate_presure(int adc_P);         
             double compensate_humidity(int adc_H);
-            /*--------------Unsigned 16bit integers for calculating the output---------------*/
+            /*----------------------values for calculating the output------------------------*/
             //Temperature
-            uint16_t dig_T1;
+            double dig_T1;
+            double dig_T2;
+            double dig_T3;
             //Presure
-            uint16_t dig_P1;
+            double dig_P1;
+            double dig_P2;
+            double dig_P3;
+            double dig_P4;
+            double dig_P5;
+            double dig_P6;
+            double dig_P7;
+            double dig_P8;
+            double dig_P9;
             //Humidity
-            uint16_t dig_H1;
-            uint16_t dig_H3;
-            /*--------------Signed 16 bit intergers for calculating the output---------------*/
-            //Temperature
-            int16_t dig_T2;
-            int16_t dig_T3;
-            //Presure
-            int16_t dig_P2;
-            int16_t dig_P3;
-            int16_t dig_P4;
-            int16_t dig_P5;
-            int16_t dig_P6;
-            int16_t dig_P7;
-            int16_t dig_P8;
-            int16_t dig_P9;
-            //Humidity
-            int16_t dig_H2;
-            int16_t dig_H4;
-            int16_t dig_H5;
-            int16_t dig_H6;
+            double dig_H1;
+            double dig_H2;
+            double dig_H3;
+            double dig_H4;
+            double dig_H5;
+            double dig_H6;
             /*---Signed 32 bit integer for comensation calculations in Humidity and presure---*/
-            int32_t     t_fine;
+            double t_fine;
             /*------------For logging if the previous measurement is correct-----------------*/
             double pres_prev_log;
             double temp_prev_log;
