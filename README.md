@@ -12,19 +12,30 @@ The only thing that is currently added is the posiblility to return the values a
 #include "mbed.h"
 #include "BME280.h"
 
-Serial pc(USBTX,USBRX); 
-char addr = 0x76 << 1;
+using namespace Particula;
 
-BME280 TphI2c = BME280(D0, D1, addr);
+int main(){
+    mbed::I2C i2cCom(D14, D15);
+    BME280 tph_sensor = BME280(&i2cCom); // D4 en D5 voor kleine nucleo
+    mbed::Serial pc(USBTX, USBRX);
 
-int main() {
-    while(1) {
-        pc.printf("\n Humidity = %lf", TphI2c.getHumidity());
-        pc.printf("\n Temperature = %lf", TphI2c.getTemperature());
-        pc.printf("\n Presure = %lf", TphI2c.getPressure());
-        wait(2);
+    tph_sensor.awake();
+
+    double temperature = tph_sensor.temperature();  // value in °C
+    double humidity = tph_sensor.humidity();        // value in %
+    double pressure = tph_sensor.presure();        // value in hPa
+
+    while(true){
+        wait_ms(10000);
+        tph_sensor.awake();
+        temperature = tph_sensor.temperature();  // value in °C
+        humidity = tph_sensor.humidity();        // value in %
+        pressure = tph_sensor.presure();        // value in hPa
+        pc.printf("[Particula] Measered temperature:  %4.2f °C\r\n", temperature);
+        pc.printf("[Particula] Measered humidity:     %4.2f %%\r\n", humidity);
+        pc.printf("[Particula] Measered pressure:     %4.2f hPa\r\n", pressure);
+        tph_sensor.sleep();
     }
-
 }
 ```
 
